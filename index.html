@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoría Integral AMORMS – Planta Láctea El Prado S.A.S.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F0;
+    --cream-dark: #F0EBE0;
+    --ink: #1A1410;
+    --ink-muted: #5A5245;
+    --ink-faint: #9A9082;
+    --accent-gold: #C8963E;
+    --accent-gold-light: #F5E4C3;
+    --accent-teal: #1D7A6A;
+    --accent-teal-light: #D4EDE9;
+    --accent-red: #B94040;
+    --accent-red-light: #F5DADA;
+    --accent-blue: #2A5EA8;
+    --accent-blue-light: #D8E6F5;
+    --accent-green: #3A7A3A;
+    --accent-green-light: #D8EDD8;
+    --border: rgba(26,20,16,0.12);
+    --border-strong: rgba(26,20,16,0.25);
+    --shadow-sm: 0 2px 8px rgba(26,20,16,0.06);
+    --shadow-md: 0 6px 24px rgba(26,20,16,0.10);
+    --shadow-lg: 0 16px 48px rgba(26,20,16,0.14);
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,247,240,0.96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    padding: 0 clamp(1rem,5vw,3rem);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--ink); padding: 0.9rem 0;
+    white-space: nowrap;
+  }
+  .nav-brand span { color: var(--accent-gold); }
+  .nav-links { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-left: auto; }
+  .nav-links a {
+    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em;
+    color: var(--ink-muted); text-decoration: none;
+    padding: 0.45rem 0.75rem; border-radius: var(--radius-sm);
+    transition: all 0.2s; text-transform: uppercase;
+  }
+  .nav-links a:hover { background: var(--cream-dark); color: var(--ink); }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--ink);
+    color: var(--cream);
+    padding: clamp(3rem,8vw,6rem) clamp(1.5rem,6vw,4rem);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,150,62,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -40px; left: 10%;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(29,122,106,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(200,150,62,0.2);
+    color: var(--accent-gold);
+    border: 1px solid rgba(200,150,62,0.35);
+    border-radius: 100px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem,5vw,3.5rem);
+    font-weight: 900; line-height: 1.15;
+    max-width: 720px; margin-bottom: 1.25rem;
+  }
+  .hero h1 em { color: var(--accent-gold); font-style: normal; }
+  .hero-sub {
+    font-size: 1rem; color: rgba(250,247,240,0.7);
+    max-width: 600px; margin-bottom: 2.5rem;
+  }
+  .hero-meta {
+    display: flex; gap: 2rem; flex-wrap: wrap;
+  }
+  .hero-meta-item {
+    display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .hero-meta-label {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(250,247,240,0.45);
+  }
+  .hero-meta-value {
+    font-size: 0.9rem; font-weight: 500;
+    color: rgba(250,247,240,0.9);
+  }
+
+  /* ─── SECTION WRAPPER ─── */
+  .section {
+    padding: clamp(2.5rem,6vw,4.5rem) clamp(1.5rem,6vw,4rem);
+    max-width: 1200px; margin: 0 auto;
+  }
+  .section-full {
+    padding: clamp(2.5rem,6vw,4.5rem) clamp(1.5rem,6vw,4rem);
+    background: var(--cream-dark);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .section-full-inner { max-width: 1200px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent-gold);
+    margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 40px;
+    height: 1px; background: var(--accent-gold); opacity: 0.4;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem,3.5vw,2.4rem);
+    font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem;
+  }
+  .section-desc {
+    font-size: 0.95rem; color: var(--ink-muted);
+    max-width: 680px; margin-bottom: 2.5rem;
+    line-height: 1.75;
+  }
+
+  /* ─── CONTEXT CARDS ─── */
+  .context-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem; margin-bottom: 2rem;
+  }
+  .context-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem; box-shadow: var(--shadow-sm);
+  }
+  .context-card-icon {
+    width: 40px; height: 40px; border-radius: var(--radius-sm);
+    background: var(--accent-gold-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: 1rem;
+  }
+  .context-card h3 {
+    font-size: 0.85rem; font-weight: 600; color: var(--ink-muted);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;
+  }
+  .context-card p {
+    font-size: 0.92rem; color: var(--ink); line-height: 1.6;
+  }
+
+  /* ─── AMORMS TABLE ─── */
+  .amorms-table-wrap { overflow-x: auto; margin-bottom: 2rem; }
+  .amorms-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .amorms-table thead tr {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .amorms-table th {
+    padding: 0.85rem 1rem; text-align: left;
+    font-weight: 600; font-size: 0.8rem;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .amorms-table th:last-child, .amorms-table td:last-child { text-align: center; }
+  .amorms-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .amorms-table tbody tr:hover { background: rgba(200,150,62,0.04); }
+  .amorms-table tbody tr:last-child td { border-bottom: none; }
+  .score-bar-cell { min-width: 140px; }
+  .score-bar-wrap { display: flex; align-items: center; gap: 0.6rem; }
+  .score-bar {
+    flex: 1; height: 6px; background: var(--cream-dark);
+    border-radius: 3px; overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.8s ease;
+  }
+  .score-val { font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 400; min-width: 28px; }
+
+  .badge {
+    display: inline-block; font-size: 0.7rem; font-weight: 600;
+    padding: 0.2rem 0.6rem; border-radius: 100px; letter-spacing: 0.03em;
+  }
+  .badge-good { background: var(--accent-green-light); color: var(--accent-green); }
+  .badge-mid { background: var(--accent-gold-light); color: #8a6020; }
+  .badge-low { background: var(--accent-red-light); color: var(--accent-red); }
+
+  /* ─── CHART GRIDS ─── */
+  .chart-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem; margin-bottom: 2rem;
+  }
+  .chart-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem; box-shadow: var(--shadow-sm);
+  }
+  .chart-card-title {
+    font-size: 0.82rem; font-weight: 600; color: var(--ink-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ─── RAM STATS ─── */
+  .ram-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .ram-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem; box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden;
+  }
+  .ram-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .ram-card.teal::before { background: var(--accent-teal); }
+  .ram-card.gold::before { background: var(--accent-gold); }
+  .ram-card.red::before { background: var(--accent-red); }
+  .ram-card.blue::before { background: var(--accent-blue); }
+  .ram-label {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.4rem;
+  }
+  .ram-equipment { font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 0.75rem; }
+  .ram-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 700; line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .ram-value.teal { color: var(--accent-teal); }
+  .ram-value.gold { color: var(--accent-gold); }
+  .ram-value.red { color: var(--accent-red); }
+  .ram-value.blue { color: var(--accent-blue); }
+  .ram-unit { font-size: 0.8rem; color: var(--ink-faint); }
+  .ram-trend {
+    font-size: 0.78rem; margin-top: 0.5rem; font-weight: 500;
+  }
+  .ram-trend.up { color: var(--accent-green); }
+  .ram-trend.down { color: var(--accent-red); }
+
+  /* ─── RAM TABLE ─── */
+  .ram-full-table { overflow-x: auto; margin-bottom: 2rem; }
+  .ram-full-table table {
+    width: 100%; border-collapse: collapse; font-size: 0.87rem;
+  }
+  .ram-full-table thead th {
+    background: var(--ink); color: var(--cream);
+    padding: 0.8rem 0.9rem; text-align: left;
+    font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .ram-full-table td {
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .ram-full-table tbody tr:nth-child(even) { background: rgba(200,150,62,0.03); }
+  .ram-full-table tbody tr:hover { background: rgba(200,150,62,0.07); }
+  .disp-pill {
+    display: inline-block; padding: 0.2rem 0.7rem;
+    border-radius: 100px; font-weight: 600; font-size: 0.8rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .disp-high { background: var(--accent-green-light); color: var(--accent-green); }
+  .disp-mid { background: var(--accent-gold-light); color: #8a6020; }
+  .disp-low { background: var(--accent-red-light); color: var(--accent-red); }
+
+  /* ─── FINDINGS MATRIX ─── */
+  .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .finding-card {
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid;
+  }
+  .finding-critical {
+    background: var(--accent-red-light);
+    border-color: var(--accent-red);
+  }
+  .finding-opportunity {
+    background: var(--accent-gold-light);
+    border-color: var(--accent-gold);
+  }
+  .finding-strength {
+    background: var(--accent-green-light);
+    border-color: var(--accent-green);
+  }
+  .finding-type {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+  .finding-critical .finding-type { color: var(--accent-red); }
+  .finding-opportunity .finding-type { color: #8a6020; }
+  .finding-strength .finding-type { color: var(--accent-green); }
+  .finding-title {
+    font-weight: 600; font-size: 0.92rem; margin-bottom: 0.35rem; line-height: 1.4;
+  }
+  .finding-desc { font-size: 0.83rem; color: var(--ink-muted); line-height: 1.55; }
+
+  /* ─── ACTION PLAN TABLE ─── */
+  .action-table-wrap { overflow-x: auto; }
+  .action-table {
+    width: 100%; border-collapse: collapse; font-size: 0.86rem;
+  }
+  .action-table thead th {
+    background: var(--ink); color: var(--cream);
+    padding: 0.8rem 1rem; text-align: left;
+    font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .action-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .action-table tbody tr:nth-child(even) { background: rgba(200,150,62,0.03); }
+  .action-table tbody tr:hover { background: rgba(200,150,62,0.07); }
+  .prio-badge {
+    display: inline-block; font-size: 0.68rem; font-weight: 700;
+    padding: 0.2rem 0.55rem; border-radius: 100px; text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .prio-alta { background: var(--accent-red-light); color: var(--accent-red); }
+  .prio-media { background: var(--accent-gold-light); color: #8a6020; }
+  .prio-baja { background: var(--accent-green-light); color: var(--accent-green); }
+  .plazo-badge {
+    display: inline-block; font-size: 0.78rem; font-weight: 500;
+    color: var(--ink-muted); background: var(--cream-dark);
+    border-radius: var(--radius-sm); padding: 0.15rem 0.5rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ─── CONCLUSIONS ─── */
+  .conclusion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .conclusion-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem; box-shadow: var(--shadow-sm);
+  }
+  .conclusion-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 900; color: var(--accent-gold);
+    opacity: 0.4; line-height: 1; margin-bottom: 0.5rem;
+  }
+  .conclusion-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.35rem; }
+  .conclusion-text { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.6; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink); color: rgba(250,247,240,0.6);
+    text-align: center; padding: 2.5rem;
+    font-size: 0.8rem;
+  }
+  footer strong { color: var(--accent-gold); }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* Accordion for AMORMS questions */
+  .accordion { margin-bottom: 0.75rem; }
+  .accordion-header {
+    width: 100%; text-align: left;
+    background: var(--cream); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1.1rem;
+    font-size: 0.88rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.2s;
+  }
+  .accordion-header:hover { background: var(--cream-dark); }
+  .accordion-icon { transition: transform 0.3s; font-size: 1.1rem; color: var(--ink-faint); }
+  .accordion-body {
+    display: none;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    background: var(--cream);
+    font-size: 0.86rem; line-height: 1.7; color: var(--ink-muted);
+  }
+  .accordion-body ul { padding-left: 1.2rem; }
+  .accordion-body ul li { margin-bottom: 0.35rem; }
+  .accordion.open .accordion-icon { transform: rotate(45deg); }
+  .accordion.open .accordion-body { display: block; }
+
+  .amorms-cat-score {
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.8rem; }
+    .hero-meta { gap: 1rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Panel <span>AMORMS</span></div>
+  <div class="nav-links">
+    <a href="#contexto">Contexto</a>
+    <a href="#amorms">AMORMS</a>
+    <a href="#ram">Indicadores RAM</a>
+    <a href="#hallazgos">Hallazgos</a>
+    <a href="#plan">Plan de Acción</a>
+    <a href="#conclusiones">Conclusiones</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Auditoría Simulada · AMORMS · 2025</div>
+  <h1>Auditoría Integral de Mantenimiento<br>y Gestión de Activos<br><em>Planta Láctea El Prado S.A.S.</em></h1>
+  <p class="hero-sub">Panel visual interactivo que integra la evaluación AMORMS, análisis de indicadores RAM y plan de acción para optimización del sistema de mantenimiento.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Empresa</div>
+      <div class="hero-meta-value">El Prado S.A.S. (simulado)</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Sector</div>
+      <div class="hero-meta-value">Agroindustria Láctea</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Alcance</div>
+      <div class="hero-meta-value">Línea de pasteurización y empaque</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Metodología</div>
+      <div class="hero-meta-value">AMORMS · ISO 55001 · RAM</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Fecha</div>
+      <div class="hero-meta-value">Junio 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 1: CONTEXTO -->
+<!-- ══════════════════════════════════════ -->
+<section class="section" id="contexto">
+  <div class="section-label">Sección 1</div>
+  <h2 class="section-title">Contextualización del Caso</h2>
+  <p class="section-desc">
+    Este panel presenta una <strong>auditoría simulada con datos fundamentados</strong>, construida sobre parámetros típicos del sector lácteo colombiano. La situación empresarial es de naturaleza simulada; los valores numéricos responden a rangos documentados en la literatura técnica de confiabilidad operacional.
+  </p>
+
+  <div class="context-grid">
+    <div class="context-card">
+      <div class="context-card-icon">🏭</div>
+      <h3>Empresa auditada</h3>
+      <p>Planta Láctea <strong>El Prado S.A.S.</strong> — empresa de tamaño mediano ubicada en el departamento de Boyacá, con capacidad de procesamiento de 50.000 litros/día.</p>
+    </div>
+    <div class="context-card">
+      <div class="context-card-icon">🎯</div>
+      <h3>Alcance de la auditoría</h3>
+      <p>Línea crítica de <strong>pasteurización HTST</strong> y <strong>empaque aséptico</strong>: pasteurizadores, llenadoras, homogeneizadores, tanques CIP y sistema de refrigeración.</p>
+    </div>
+    <div class="context-card">
+      <div class="context-card-icon">👥</div>
+      <h3>Equipo auditado</h3>
+      <p>Se aplicó el cuestionario AMORMS a <strong>6 roles</strong>: Gerente de Planta, Jefe de Mantenimiento, Supervisor, 2 Técnicos Electromecánicos y Jefe de Producción.</p>
+    </div>
+    <div class="context-card">
+      <div class="context-card-icon">📋</div>
+      <h3>Tipo de caso</h3>
+      <p><strong>Simulación fundamentada</strong>: datos construidos con base en indicadores reales del sector lácteo y la metodología AMORMS (Parra y Crespo, 2015; Córdoba et al., 2025).</p>
+    </div>
+    <div class="context-card">
+      <div class="context-card-icon">⚙️</div>
+      <h3>Activos críticos</h3>
+      <p>Pasteurizador HTST (P-01), Llenadora aséptica (L-01), Homogeneizador (H-01), Sistema CIP (CIP-01) y Compresor de refrigeración (R-01).</p>
+    </div>
+    <div class="context-card">
+      <div class="context-card-icon">🔍</div>
+      <h3>Evidencias recopiladas</h3>
+      <p>Revisión documental de OTs, entrevistas semiestructuradas, inspección in situ de tableros de control e histórico de fallas de 12 meses (simulado).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 2: AMORMS -->
+<!-- ══════════════════════════════════════ -->
+<div class="section-full" id="amorms">
+<div class="section-full-inner">
+  <div class="section-label">Sección 2</div>
+  <h2 class="section-title">Resultados del Cuestionario AMORMS</h2>
+  <p class="section-desc">
+    Evaluación de las 8 categorías del modelo AMORMS (Parra y Crespo, 2015) mediante cuestionario guía de 150 preguntas. Escala: 1 (muy deficiente) → 5 (clase mundial). Se presentan promedios de los 6 participantes.
+  </p>
+
+  <!-- Gráfico de Radar + Barras -->
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-card-title">Diagrama de Radar AMORMS — Promedios por categoría</div>
+      <div style="position:relative;height:320px;">
+        <canvas id="radarChart" role="img" aria-label="Diagrama de radar con las 8 categorías AMORMS y sus puntajes promedio">Radar chart AMORMS: Gestión Activos 2.8, Jerarquización Riesgo 3.4, Análisis Fallas 2.6, Planificación 3.8, Recursos y Soporte 3.5, Indicadores RAM 3.2, Ciclo de Vida 2.2, Mejora Continua 2.7.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">Comparativo por categoría — Puntaje promedio vs. Clase Mundial (5.0)</div>
+      <div style="position:relative;height:320px;">
+        <canvas id="barChart" role="img" aria-label="Gráfico de barras horizontales comparando puntajes AMORMS por categoría">Bar chart horizontal mostrando las 8 categorías AMORMS con sus puntajes frente al nivel óptimo.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de resultados AMORMS -->
+  <div class="amorms-table-wrap">
+    <table class="amorms-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Categoría AMORMS</th>
+          <th>Puntaje promedio</th>
+          <th class="score-bar-cell">Desempeño</th>
+          <th>Nivel</th>
+          <th>Hallazgo principal</th>
+        </tr>
+      </thead>
+      <tbody id="amorms-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Acordeones por categoría -->
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:1rem;">Análisis detallado por categoría</h3>
+  <div id="accordion-container"></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 3: INDICADORES RAM -->
+<!-- ══════════════════════════════════════ -->
+<section class="section" id="ram">
+  <div class="section-label">Sección 3</div>
+  <h2 class="section-title">Análisis de Indicadores RAM</h2>
+  <p class="section-desc">
+    Cálculo de MTBF (tiempo medio entre fallas), MTTR (tiempo medio de reparación) y Disponibilidad para los 5 equipos críticos de la línea láctea. Datos correspondientes al histórico simulado de 12 meses (4.380 horas de operación potencial).
+  </p>
+
+  <!-- Fórmulas -->
+  <div style="background:var(--ink);color:var(--cream);border-radius:var(--radius-md);padding:1.5rem 2rem;margin-bottom:2rem;display:flex;gap:2rem;flex-wrap:wrap;align-items:center;">
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--accent-gold);margin-bottom:0.3rem;">MTBF</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.88rem;color:rgba(250,247,240,0.75);">= Tiempo operativo / N° fallas</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--accent-gold);margin-bottom:0.3rem;">MTTR</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.88rem;color:rgba(250,247,240,0.75);">= Tiempo total reparación / N° fallas</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--accent-gold);margin-bottom:0.3rem;">Disponibilidad</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.88rem;color:rgba(250,247,240,0.75);">= MTBF / (MTBF + MTTR) × 100%</div>
+    </div>
+  </div>
+
+  <!-- Tarjetas resumen por equipo -->
+  <h3 style="font-size:0.95rem;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem;">Resumen ejecutivo por equipo</h3>
+  <div class="ram-grid" id="ram-cards"></div>
+
+  <!-- Tabla RAM completa -->
+  <h3 style="font-size:0.95rem;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem;">Tabla detallada de indicadores RAM</h3>
+  <div class="ram-full-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Equipo</th>
+          <th>Código</th>
+          <th>Fallas (12 meses)</th>
+          <th>T. operativo (h)</th>
+          <th>T. reparación total (h)</th>
+          <th>MTBF (h)</th>
+          <th>MTTR (h)</th>
+          <th>Disponibilidad</th>
+          <th>Clasificación</th>
+        </tr>
+      </thead>
+      <tbody id="ram-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Gráficos RAM -->
+  <div class="chart-grid-2" style="margin-top:2rem;">
+    <div class="chart-card">
+      <div class="chart-card-title">MTBF vs. MTTR por equipo (horas)</div>
+      <div style="position:relative;height:280px;">
+        <canvas id="ramBarChart" role="img" aria-label="Gráfico de barras agrupadas comparando MTBF y MTTR por equipo">MTBF y MTTR para 5 equipos críticos de la planta láctea.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">Evolución de disponibilidad (tendencia mensual simulada)</div>
+      <div style="position:relative;height:280px;">
+        <canvas id="dispLineChart" role="img" aria-label="Gráfico de líneas mostrando evolución de disponibilidad mensual por equipo">Tendencia de disponibilidad mensual para los equipos críticos durante 6 meses.</canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 4: HALLAZGOS -->
+<!-- ══════════════════════════════════════ -->
+<div class="section-full" id="hallazgos">
+<div class="section-full-inner">
+  <div class="section-label">Sección 4</div>
+  <h2 class="section-title">Matriz Visual de Hallazgos</h2>
+  <p class="section-desc">
+    Clasificación de hallazgos según su naturaleza (no conformidad crítica, oportunidad de mejora o fortaleza) y nivel de impacto operacional, basada en los resultados AMORMS y el análisis de indicadores RAM.
+  </p>
+
+  <!-- Contadores -->
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;">
+    <div style="background:var(--accent-red-light);border:1px solid rgba(185,64,64,0.2);border-radius:var(--radius-sm);padding:0.75rem 1.5rem;display:flex;align-items:center;gap:0.75rem;">
+      <span style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--accent-red);">4</span>
+      <span style="font-size:0.8rem;color:var(--accent-red);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">No conformidades<br>críticas</span>
+    </div>
+    <div style="background:var(--accent-gold-light);border:1px solid rgba(200,150,62,0.2);border-radius:var(--radius-sm);padding:0.75rem 1.5rem;display:flex;align-items:center;gap:0.75rem;">
+      <span style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--accent-gold);">5</span>
+      <span style="font-size:0.8rem;color:#8a6020;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Oportunidades<br>de mejora</span>
+    </div>
+    <div style="background:var(--accent-green-light);border:1px solid rgba(58,122,58,0.2);border-radius:var(--radius-sm);padding:0.75rem 1.5rem;display:flex;align-items:center;gap:0.75rem;">
+      <span style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--accent-green);">3</span>
+      <span style="font-size:0.8rem;color:var(--accent-green);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Fortalezas<br>identificadas</span>
+    </div>
+  </div>
+
+  <div class="findings-grid" id="findings-grid"></div>
+
+  <!-- Matriz de priorización -->
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin:2rem 0 1rem;">Matriz de priorización de hallazgos (Impacto × Urgencia)</h3>
+  <div style="position:relative;height:320px;">
+    <canvas id="matrizChart" role="img" aria-label="Gráfico de burbuja mostrando la priorización de hallazgos según impacto y urgencia">Matriz de priorización de hallazgos: cada burbuja representa un hallazgo ubicado por impacto operacional y urgencia de atención.</canvas>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 5: PLAN DE ACCIÓN -->
+<!-- ══════════════════════════════════════ -->
+<section class="section" id="plan">
+  <div class="section-label">Sección 5</div>
+  <h2 class="section-title">Plan de Acción Correctiva</h2>
+  <p class="section-desc">
+    Propuesta estructurada de acciones para mejorar el sistema de mantenimiento y gestión de activos, organizada por prioridad, responsable y plazo de implementación. Basada en las brechas identificadas en el análisis AMORMS y los indicadores RAM.
+  </p>
+
+  <div class="action-table-wrap">
+    <table class="action-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Acción correctiva / mejora</th>
+          <th>Categoría AMORMS</th>
+          <th>Prioridad</th>
+          <th>Responsable</th>
+          <th>Plazo</th>
+          <th>KPI de seguimiento</th>
+        </tr>
+      </thead>
+      <tbody id="action-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Cronograma visual tipo Gantt simplificado -->
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin:2rem 0 1rem;">Cronograma de implementación (meses)</h3>
+  <div style="position:relative;height:360px;margin-bottom:2rem;">
+    <canvas id="ganttChart" role="img" aria-label="Gráfico de barras horizontales tipo Gantt mostrando el cronograma de implementación de acciones">Cronograma de 10 acciones distribuidas en 6 meses de implementación.</canvas>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 6: CONCLUSIONES -->
+<!-- ══════════════════════════════════════ -->
+<div class="section-full" id="conclusiones">
+<div class="section-full-inner">
+  <div class="section-label">Sección 6</div>
+  <h2 class="section-title">Conclusiones y Propuesta de Mejora</h2>
+  <p class="section-desc">
+    Síntesis de los principales hallazgos y orientaciones estratégicas para la transformación del sistema de mantenimiento de la planta láctea El Prado S.A.S.
+  </p>
+  <div class="conclusion-grid">
+    <div class="conclusion-card">
+      <div class="conclusion-num">01</div>
+      <div class="conclusion-title">Gestión de activos débilmente alineada</div>
+      <div class="conclusion-text">El puntaje de 2.8/5 en la categoría de Gestión de Activos evidencia que los KPIs de mantenimiento no están formalmente vinculados a los objetivos estratégicos de la organización. Se requiere un Plan Estratégico de Mantenimiento documentado y aprobado por la gerencia.</div>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-num">02</div>
+      <div class="conclusion-title">Análisis de ciclo de vida inexistente</div>
+      <div class="conclusion-text">Con 2.2/5, el LCC (Life Cycle Cost) no se aplica en ningún activo crítico. Esto implica que las decisiones de reemplazo vs. reparación se toman de forma reactiva. Implementar LCC para pasteurizador y llenadora es prioritario.</div>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-num">03</div>
+      <div class="conclusion-title">Disponibilidad crítica en equipo clave</div>
+      <div class="conclusion-text">El Pasteurizador HTST (P-01) registra 88.9% de disponibilidad con MTBF de 160h y MTTR de 20h, por debajo del estándar de clase mundial (&gt;95%). Requiere plan de mantenimiento predictivo basado en análisis de vibración y temperatura.</div>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-num">04</div>
+      <div class="conclusion-title">Planificación como fortaleza a consolidar</div>
+      <div class="conclusion-text">El puntaje de 3.8/5 en Planificación y Programación es la mayor fortaleza del sistema. Sin embargo, la integración de técnicas predictivas sigue siendo limitada. Este es el pilar sobre el cual construir la mejora continua.</div>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-num">05</div>
+      <div class="conclusion-title">Mejora continua requiere formalización</div>
+      <div class="conclusion-text">Con 2.7/5, los ciclos PHVA no están documentados ni son sistemáticos. Se recomienda establecer un comité mensual de revisión de indicadores RAM y seguimiento al plan de acción con KPIs claramente definidos.</div>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-num">06</div>
+      <div class="conclusion-title">Impacto estimado de las mejoras</div>
+      <div class="conclusion-text">La implementación del plan de acción en 6 meses proyecta elevar el puntaje AMORMS promedio de 3.03 a 3.8, incrementar la disponibilidad media de los equipos críticos de 91.4% a 95%+, y reducir costos de mantenimiento correctivo en un 25%.</div>
+    </div>
+  </div>
+
+  <div style="background:var(--ink);color:var(--cream);border-radius:var(--radius-md);padding:2rem;margin-top:2rem;display:flex;flex-direction:column;gap:0.75rem;">
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--accent-gold);">Nota metodológica</div>
+    <p style="font-size:0.88rem;color:rgba(250,247,240,0.75);line-height:1.75;">
+      Esta auditoría simulada se fundamenta en la metodología AMORMS (Parra &amp; Crespo, 2015), las 8 fases del Modelo de Gestión de Mantenimiento, los indicadores RAM conforme a lo establecido en <em>Auditoría en Mantenimiento y Gestión de Activos</em> (Córdoba et al., USTA Tunja, 2025), y principios de ISO 55001. Los datos numéricos son simulados con base en rangos documentados del sector agroindustrial lácteo colombiano. Esta simulación constituye un ejercicio académico con rigor técnico.
+    </p>
+    <p style="font-size:0.82rem;color:rgba(250,247,240,0.45);">
+      Referencias: Parra C., Crespo A. (2015). Técnicas de auditoría para los procesos de mantenimiento, fiabilidad operacional y gestión de activos. IngeCon, Rev. 2. · Córdoba et al. (2025). Auditoría en mantenimiento y gestión de activos. USTA Tunja. · ISO 55001:2014. Asset Management. Systems requirements.
+    </p>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Panel Visual Interactivo — Actividad 2.1 · Simulación de Auditoría Integral con Análisis de Indicadores RAM</p>
+  <p style="margin-top:0.5rem;">Especialización en Gestión de Mantenimiento · <strong>USTA Tunja · 2025</strong> · Metodología AMORMS</p>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!--  SCRIPTS                                                    -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<script>
+/* ── DATA ── */
+const amorms = [
+  { id:1, cat:'Gestión de Activos, KPIs y organización de soporte', score:2.8, finding:'Ausencia de un Plan Estratégico de Mantenimiento documentado y vinculado a los objetivos del negocio.', detail:'Se evidencia que los objetivos de mantenimiento no están formalizados ni alineados con las metas productivas. Los KPIs de mantenimiento (disponibilidad, OEE, costos) no son monitoreados de forma sistemática. No existe una estructura organizacional clara de soporte al mantenimiento.', items:['KPIs de mantenimiento sin definición formal','Sin Plan Estratégico de Mantenimiento escrito','Roles y responsabilidades parcialmente definidos','No hay revisión gerencial periódica de resultados'] },
+  { id:2, cat:'Modelos de jerarquización basados en riesgo (criticidad)', score:3.4, finding:'Existe un listado de equipos críticos pero sin metodología formal de criticidad (matriz riesgo × frecuencia).', detail:'Se identificó un listado de equipos catalogados como "críticos" por los técnicos, pero este no obedece a una metodología documentada. No se ha aplicado análisis de criticidad con factores de consecuencia (seguridad, ambiente, producción, costos). Sin embargo, el conocimiento empírico del equipo técnico permite una jerarquización básica funcional.', items:['Listado de críticos sin metodología formal','Sin análisis de criticidad documentado (Riesgo × Frecuencia)','Decisiones de mantenimiento basadas en experiencia técnica','Oportunidad: implementar matriz de criticidad cuantificada'] },
+  { id:3, cat:'Análisis de problemas y gestión de fallas (RCA)', score:2.6, finding:'Las fallas se corrigen reactivamente; no existe procedimiento estándar de análisis de causa raíz.', detail:'Las fallas se atienden de forma correctiva sin registro sistemático. No se aplica metodología RCA (5 Porqués, Ishikawa, FMEA) para identificar causas raíz. Las órdenes de trabajo (OT) se cierran sin descripción de causa, lo que impide el aprendizaje organizacional. El análisis de fallas no está incluido en un proceso de mejora continua.', items:['Sin metodología RCA documentada','OTs cerradas sin registro de causa raíz','Sin base de datos de fallas estructurada','Sin análisis FMEA en equipos críticos','No hay indicadores de efectividad de reparaciones'] },
+  { id:4, cat:'Procesos de planificación y programación', score:3.8, finding:'Existen planes de mantenimiento preventivo; la debilidad es la integración de técnicas predictivas.', detail:'La planta cuenta con un plan de mantenimiento preventivo documentado con frecuencias definidas. Las OTs se programan semanalmente. La debilidad identificada es la escasa o nula aplicación de técnicas de mantenimiento predictivo (análisis de vibración, termografía, análisis de aceite) que permitirían anticipar fallas y reducir el MTTR.', items:['Plan preventivo documentado (fortaleza)','Programación semanal de OTs activa','Sin técnicas de monitoreo por condición','Cronogramas no integrados con el CMMS','Oportunidad: incorporar mantenimiento predictivo'] },
+  { id:5, cat:'Asignación de recursos, soporte informático y logístico', score:3.5, finding:'El CMMS existe pero se usa parcialmente; la gestión de repuestos críticos es deficiente.', detail:'La empresa dispone de un CMMS básico para gestión de OTs. Sin embargo, no se retroalimentan indicadores de desempeño desde el sistema. La gestión de inventario de repuestos es manual y no tiene criterios de stock mínimo para activos críticos. Esto ha generado paradas por indisponibilidad de repuestos (evidenciado en el análisis de MTTR del pasteurizador).', items:['CMMS disponible pero subutilizado','Sin indicadores automáticos desde el sistema','Inventario de repuestos críticos sin stock mínimo definido','Técnicos sin plan de capacitación formal anual'] },
+  { id:6, cat:'Control y análisis de indicadores técnicos RAM', score:3.2, finding:'MTBF y disponibilidad se calculan informalmente; sin programa sistemático de revisión de indicadores.', detail:'Algunos indicadores RAM se calculan ocasionalmente por el jefe de mantenimiento, pero no existe un programa formal de cálculo y revisión periódica. No hay tablero de control de indicadores. Los valores de MTBF, MTTR y disponibilidad no se comparten con la gerencia. Se recomienda implementar un panel de indicadores mensual y trimestral con revisión gerencial.', items:['Indicadores RAM calculados ocasionalmente','Sin programa de revisión periódica de indicadores','Sin tablero de control visible para la organización','Sin benchmarking con estándares del sector'] },
+  { id:7, cat:'Análisis de costos de ciclo de vida de activos (LCC)', score:2.2, finding:'No se aplica análisis LCC en ningún activo. Decisiones de reemplazo sin sustento técnico-económico.', detail:'Esta es la categoría con menor puntaje. No existe ningún estudio de costo de ciclo de vida para los activos de la línea de pasteurización. Las decisiones de reemplazo de equipos se toman de forma reactiva y sin análisis técnico-económico que evalúe alternativas. Esta brecha es crítica, pues el pasteurizador y la llenadora tienen más de 12 años de operación.', items:['Sin estudios LCC en activos críticos','Decisiones de reemplazo sin análisis costo-beneficio','Sin proyecciones de costos futuros de mantenimiento','Sin criterios económicos para reemplazo vs. reparación','Oportunidad de mayor impacto en gestión de activos'] },
+  { id:8, cat:'Procesos de revisión y mejora continua', score:2.7, finding:'No hay ciclos PHVA formalizados; las acciones de mejora son reactivas y no se documentan ni auditan.', detail:'La mejora continua no está sistematizada. Cuando se implementan mejoras, no se documentan ni evalúan sus resultados. No hay comités de mejora ni reuniones periódicas de seguimiento a indicadores. Las lecciones aprendidas no se capitalizan. Se recomienda establecer un ciclo PHVA mensual con seguimiento formal a los KPIs y al plan de acción de auditoría.', items:['Sin ciclo PHVA documentado','Sin comités de mejora continua formales','Acciones de mejora no documentadas ni auditadas','Sin programa de auditorías internas de mantenimiento','Lecciones aprendidas no capitalizadas'] }
+];
+
+const ramData = [
+  { name:'Pasteurizador HTST', code:'P-01', fallas:20, top:3560, tr:400, color:'red' },
+  { name:'Llenadora Aséptica', code:'L-01', fallas:14, top:3850, tr:280, color:'gold' },
+  { name:'Homogeneizador', code:'H-01', fallas:9,  top:4050, tr:180, color:'teal' },
+  { name:'Sistema CIP',      code:'CIP-01', fallas:6,  top:4200, tr:120, color:'blue' },
+  { name:'Compresor Refrig.',code:'R-01', fallas:5,  top:4250, tr:100, color:'teal' }
+];
+ramData.forEach(d=>{
+  d.mtbf = Math.round(d.top/d.fallas);
+  d.mttr = Math.round(d.tr/d.fallas);
+  d.disp = ((d.mtbf/(d.mtbf+d.mttr))*100).toFixed(1);
+});
+
+const findings = [
+  { type:'critical', title:'Sin análisis de ciclo de vida (LCC)', desc:'Ningún activo crítico cuenta con estudio LCC. Decisiones de reemplazo tomadas reactivamente ponen en riesgo la continuidad operacional.' },
+  { type:'critical', title:'Análisis de fallas sin metodología RCA', desc:'Las fallas se corrigen sin identificación de causa raíz. Ausencia de FMEA y registro estructurado de fallos impide el aprendizaje organizacional.' },
+  { type:'critical', title:'Pasteurizador con disponibilidad 88.9%', desc:'Disponibilidad muy por debajo del estándar de clase mundial (>95%). MTBF de 160h revela alta frecuencia de fallas no controladas.' },
+  { type:'critical', title:'Gestión de activos desvinculada de la estrategia', desc:'Los KPIs de mantenimiento no están alineados con los objetivos del negocio. Ausencia de Plan Estratégico de Mantenimiento formal.' },
+  { type:'opportunity', title:'Implementar técnicas predictivas', desc:'La planificación preventiva existente (fortaleza) es la base ideal para incorporar monitoreo por condición (vibración, termografía) y elevar el MTBF.' },
+  { type:'opportunity', title:'Optimizar uso del CMMS', desc:'El sistema existe; se requiere configurar indicadores automáticos, flujos de OT estructurados y gestión de repuestos críticos con stock mínimo.' },
+  { type:'opportunity', title:'Formalizar revisión de indicadores RAM', desc:'Crear un tablero de control mensual con MTBF, MTTR y disponibilidad para todos los activos críticos, con revisión gerencial trimestral.' },
+  { type:'opportunity', title:'Aplicar análisis de criticidad formal', desc:'Implementar matriz de criticidad cuantificada (consecuencia × probabilidad) para priorizar recursos y estrategias de mantenimiento.' },
+  { type:'opportunity', title:'Ciclo PHVA y mejora continua', desc:'Establecer comité mensual de mejora continua con seguimiento formal a indicadores y plan de acción de auditoría.' },
+  { type:'strength', title:'Plan preventivo documentado', desc:'Existencia de un plan de mantenimiento preventivo con frecuencias definidas y programación semanal de OTs. Puntaje 4.5/5 en diseño de programas.' },
+  { type:'strength', title:'Equipo técnico con experiencia', desc:'El equipo de mantenimiento cuenta con conocimiento empírico sólido de los equipos y procesos. Base para implementar mejoras formales.' },
+  { type:'strength', title:'Alta disponibilidad en activos secundarios', desc:'Compresor R-01 (97.8%) y Sistema CIP (97.2%) presentan indicadores de clase mundial, demostrando capacidad técnica instalada.' }
+];
+
+const actions = [
+  { n:1, action:'Diseñar e implementar Plan Estratégico de Mantenimiento (PEM) con KPIs vinculados al negocio', cat:'Gestión de Activos', prio:'alta', resp:'Gerencia + Jefe Mto.', plazo:'Mes 1-2', kpi:'% KPIs definidos y monitoreados', inicio:0, dur:2 },
+  { n:2, action:'Aplicar metodología de análisis de criticidad (matriz riesgo × frecuencia) a todos los activos', cat:'Jerarquización Riesgo', prio:'alta', resp:'Jefe Mantenimiento', plazo:'Mes 1-2', kpi:'Matriz de criticidad aprobada', inicio:0, dur:2 },
+  { n:3, action:'Implementar procedimiento estándar de RCA (5 Porqués / Ishikawa) y registro en CMMS', cat:'Análisis de Fallas', prio:'alta', resp:'Supervisor Mto.', plazo:'Mes 2-3', kpi:'% fallas con RCA documentado', inicio:1, dur:2 },
+  { n:4, action:'Realizar FMEA para Pasteurizador P-01 y Llenadora L-01 y actualizar plan de mantenimiento', cat:'Análisis de Fallas', prio:'alta', resp:'Ing. Confiabilidad', plazo:'Mes 2-4', kpi:'FMEA documentado; ↑MTBF P-01', inicio:1, dur:3 },
+  { n:5, action:'Incorporar técnicas de mantenimiento predictivo: análisis de vibración y termografía en equipos críticos', cat:'Planificación', prio:'media', resp:'Jefe Mantenimiento', plazo:'Mes 3-5', kpi:'Programa predictivo activo; ↓MTTR', inicio:2, dur:3 },
+  { n:6, action:'Optimizar CMMS: configurar indicadores RAM automáticos, flujos de OT y gestión de repuestos críticos', cat:'Recursos y Soporte', prio:'alta', resp:'Jefe Mto. + IT', plazo:'Mes 1-3', kpi:'Indicadores automáticos en CMMS', inicio:0, dur:3 },
+  { n:7, action:'Implementar tablero de control mensual con indicadores RAM y revisión gerencial trimestral', cat:'Indicadores RAM', prio:'media', resp:'Jefe Mantenimiento', plazo:'Mes 2-4', kpi:'Tablero activo; reunión trimestral', inicio:1, dur:3 },
+  { n:8, action:'Realizar estudios LCC para pasteurizador P-01 (>12 años de operación) y llenadora L-01', cat:'Ciclo de Vida (LCC)', prio:'alta', resp:'Gerencia + Jefe Mto.', plazo:'Mes 3-5', kpi:'Estudio LCC aprobado; decisión fundamentada', inicio:2, dur:3 },
+  { n:9, action:'Capacitar al equipo de mantenimiento en LCC, RCA, FMEA y mantenimiento predictivo', cat:'Recursos y Soporte', prio:'media', resp:'RRHH + Jefe Mto.', plazo:'Mes 2-4', kpi:'100% técnicos capacitados', inicio:1, dur:3 },
+  { n:10, action:'Establecer ciclo PHVA formal: comité mensual de mejora, auditorías internas y lecciones aprendidas', cat:'Mejora Continua', prio:'baja', resp:'Gerencia + Jefe Mto.', plazo:'Mes 4-6', kpi:'PHVA documentado; ↑AMORMS a 3.8', inicio:3, dur:3 }
+];
+
+/* ── RENDER AMORMS TABLE ── */
+function colorForScore(s){
+  if(s>=3.5) return { bar:'#3A7A3A', cls:'badge-good', txt:'Aceptable' };
+  if(s>=2.5) return { bar:'#C8963E', cls:'badge-mid', txt:'En desarrollo' };
+  return { bar:'#B94040', cls:'badge-low', txt:'Crítico' };
+}
+const tbody = document.getElementById('amorms-tbody');
+amorms.forEach(a=>{
+  const c = colorForScore(a.score);
+  const pct = (a.score/5*100).toFixed(0);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--ink-faint);">${a.id}</td>
+    <td style="font-weight:500;max-width:240px;">${a.cat}</td>
+    <td style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:${c.bar};">${a.score.toFixed(1)}</td>
+    <td class="score-bar-cell">
+      <div class="score-bar-wrap">
+        <div class="score-bar"><div class="score-bar-fill" style="width:${pct}%;background:${c.bar};"></div></div>
+        <span class="score-val">${pct}%</span>
+      </div>
+    </td>
+    <td><span class="badge ${c.cls}">${c.txt}</span></td>
+    <td style="font-size:0.83rem;color:var(--ink-muted);max-width:260px;">${a.finding}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+/* ── RENDER ACCORDION ── */
+const accContainer = document.getElementById('accordion-container');
+amorms.forEach(a=>{
+  const c = colorForScore(a.score);
+  const div = document.createElement('div');
+  div.className = 'accordion';
+  div.innerHTML = `
+    <button class="accordion-header">
+      <div class="amorms-cat-score">
+        <span style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--ink-faint);min-width:18px;">${a.id}.</span>
+        <span>${a.cat}</span>
+        <span class="badge ${c.cls}" style="margin-left:0.5rem;">${a.score.toFixed(1)}/5</span>
+      </div>
+      <span class="accordion-icon">+</span>
+    </button>
+    <div class="accordion-body">
+      <p style="margin-bottom:0.75rem;">${a.detail}</p>
+      <ul>${a.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+    </div>
+  `;
+  div.querySelector('.accordion-header').addEventListener('click',()=>{
+    div.classList.toggle('open');
+  });
+  accContainer.appendChild(div);
+});
+
+/* ── RENDER RAM CARDS ── */
+const ramCards = document.getElementById('ram-cards');
+ramData.forEach(d=>{
+  const dispClass = d.disp>=95?'disp-high':d.disp>=90?'disp-mid':'disp-low';
+  const trendIcon = d.disp>=95?'↑':'↓';
+  const trendCls = d.disp>=95?'up':'down';
+  const div = document.createElement('div');
+  div.className = `ram-card ${d.color}`;
+  div.innerHTML = `
+    <div class="ram-label">MTBF / MTTR / Disp.</div>
+    <div class="ram-equipment">${d.name} (${d.code})</div>
+    <div class="ram-value ${d.color}">${d.disp}%</div>
+    <div class="ram-unit">Disponibilidad</div>
+    <div style="display:flex;gap:1.5rem;margin-top:0.75rem;">
+      <div>
+        <div style="font-size:0.68rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:0.05em;">MTBF</div>
+        <div style="font-family:'DM Mono',monospace;font-weight:500;">${d.mtbf}h</div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:0.05em;">MTTR</div>
+        <div style="font-family:'DM Mono',monospace;font-weight:500;">${d.mttr}h</div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:0.05em;">Fallas/año</div>
+        <div style="font-family:'DM Mono',monospace;font-weight:500;">${d.fallas}</div>
+      </div>
+    </div>
+    <div class="ram-trend ${trendCls}">${trendIcon} ${d.disp>=95?'Clase mundial':'Por debajo del estándar'}</div>
+  `;
+  ramCards.appendChild(div);
+});
+
+/* ── RENDER RAM TABLE ── */
+const ramTbody = document.getElementById('ram-tbody');
+ramData.forEach(d=>{
+  const dispPct = parseFloat(d.disp);
+  const cls = dispPct>=95?'disp-high':dispPct>=90?'disp-mid':'disp-low';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="font-weight:500;">${d.name}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:0.82rem;">${d.code}</td>
+    <td style="text-align:center;">${d.fallas}</td>
+    <td style="text-align:center;font-family:'DM Mono',monospace;">${d.top.toLocaleString()}</td>
+    <td style="text-align:center;font-family:'DM Mono',monospace;">${d.tr}</td>
+    <td style="text-align:center;font-family:'DM Mono',monospace;font-weight:600;">${d.mtbf}</td>
+    <td style="text-align:center;font-family:'DM Mono',monospace;font-weight:600;">${d.mttr}</td>
+    <td style="text-align:center;"><span class="disp-pill ${cls}">${d.disp}%</span></td>
+    <td style="text-align:center;"><span class="badge ${dispPct>=95?'badge-good':dispPct>=90?'badge-mid':'badge-low'}">${dispPct>=95?'Clase mundial':dispPct>=90?'Aceptable':'Crítico'}</span></td>
+  `;
+  ramTbody.appendChild(tr);
+});
+
+/* ── RENDER FINDINGS ── */
+const fGrid = document.getElementById('findings-grid');
+findings.forEach(f=>{
+  const cls = f.type==='critical'?'finding-critical':f.type==='opportunity'?'finding-opportunity':'finding-strength';
+  const typeTxt = f.type==='critical'?'No conformidad crítica':f.type==='opportunity'?'Oportunidad de mejora':'Fortaleza';
+  const div = document.createElement('div');
+  div.className = `finding-card ${cls}`;
+  div.innerHTML = `
+    <div class="finding-type">${typeTxt}</div>
+    <div class="finding-title">${f.title}</div>
+    <div class="finding-desc">${f.desc}</div>
+  `;
+  fGrid.appendChild(div);
+});
+
+/* ── RENDER ACTION TABLE ── */
+const actTbody = document.getElementById('action-tbody');
+actions.forEach(a=>{
+  const prioCls = a.prio==='alta'?'prio-alta':a.prio==='media'?'prio-media':'prio-baja';
+  const prioTxt = a.prio==='alta'?'Alta':a.prio==='media'?'Media':'Baja';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--ink-faint);">${a.n}</td>
+    <td style="max-width:300px;font-size:0.87rem;">${a.action}</td>
+    <td style="font-size:0.82rem;color:var(--ink-muted);">${a.cat}</td>
+    <td><span class="prio-badge ${prioCls}">${prioTxt}</span></td>
+    <td style="font-size:0.85rem;">${a.resp}</td>
+    <td><span class="plazo-badge">${a.plazo}</span></td>
+    <td style="font-size:0.82rem;color:var(--ink-muted);">${a.kpi}</td>
+  `;
+  actTbody.appendChild(tr);
+});
+
+/* ══ CHARTS ══ */
+/* Radar AMORMS */
+new Chart(document.getElementById('radarChart'),{
+  type:'radar',
+  data:{
+    labels:['Gestión Activos','Jerarquiz. Riesgo','Análisis Fallas','Planificación','Recursos y Soporte','Indicadores RAM','Ciclo de Vida','Mejora Continua'],
+    datasets:[
+      { label:'El Prado S.A.S.', data:[2.8,3.4,2.6,3.8,3.5,3.2,2.2,2.7], borderColor:'#C8963E', backgroundColor:'rgba(200,150,62,0.15)', borderWidth:2, pointBackgroundColor:'#C8963E' },
+      { label:'Clase Mundial (5.0)', data:[5,5,5,5,5,5,5,5], borderColor:'rgba(29,122,106,0.5)', backgroundColor:'rgba(29,122,106,0.05)', borderWidth:1.5, borderDash:[5,5], pointRadius:0 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false, scales:{ r:{ min:0, max:5, ticks:{ stepSize:1, font:{size:10} }, pointLabels:{ font:{size:9} } } }, plugins:{ legend:{ position:'bottom', labels:{ font:{size:10}, boxWidth:10 } } } }
+});
+
+/* Bar AMORMS horizontal */
+new Chart(document.getElementById('barChart'),{
+  type:'bar',
+  data:{
+    labels:['Gestión Activos','Jerarquiz. Riesgo','Análisis Fallas','Planificación','Recursos/Soporte','Indicadores RAM','Ciclo de Vida','Mejora Continua'],
+    datasets:[
+      { label:'Puntaje actual', data:[2.8,3.4,2.6,3.8,3.5,3.2,2.2,2.7],
+        backgroundColor:['#B94040','#C8963E','#B94040','#3A7A3A','#C8963E','#C8963E','#B94040','#B94040'] },
+      { label:'Meta clase mundial', data:[5,5,5,5,5,5,5,5], backgroundColor:'rgba(26,20,16,0.08)', barThickness:4 }
+    ]
+  },
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    scales:{ x:{ min:0, max:5, ticks:{ stepSize:1, font:{size:10} } }, y:{ ticks:{ font:{size:9} } } },
+    plugins:{ legend:{ position:'bottom', labels:{ font:{size:10}, boxWidth:10 } } }
+  }
+});
+
+/* RAM Bar */
+new Chart(document.getElementById('ramBarChart'),{
+  type:'bar',
+  data:{
+    labels:ramData.map(d=>d.code),
+    datasets:[
+      { label:'MTBF (h)', data:ramData.map(d=>d.mtbf), backgroundColor:'#1D7A6A' },
+      { label:'MTTR (h)', data:ramData.map(d=>d.mttr), backgroundColor:'#B94040' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    scales:{ x:{ ticks:{font:{size:10}} }, y:{ ticks:{font:{size:10}} } },
+    plugins:{ legend:{ position:'bottom', labels:{font:{size:10}, boxWidth:10} } }
+  }
+});
+
+/* Disponibilidad línea mensual (tendencia simulada) */
+const meses = ['Ene','Feb','Mar','Abr','May','Jun'];
+const dispTrend = {
+  'P-01': [85.2,86.1,87.5,88.0,88.9,88.9],
+  'L-01': [90.1,91.0,91.8,92.5,93.2,93.2],
+  'H-01': [94.2,95.0,95.4,95.8,95.7,95.7],
+  'CIP-01':[96.5,97.0,97.2,97.5,97.2,97.2],
+  'R-01': [97.0,97.5,97.8,98.0,97.8,97.8]
+};
+const lineColors = ['#B94040','#C8963E','#1D7A6A','#2A5EA8','#3A7A3A'];
+new Chart(document.getElementById('dispLineChart'),{
+  type:'line',
+  data:{
+    labels:meses,
+    datasets:ramData.map((d,i)=>({
+      label:d.code,
+      data:dispTrend[d.code],
+      borderColor:lineColors[i],
+      backgroundColor:'transparent',
+      borderWidth:2, tension:0.35,
+      pointRadius:3
+    }))
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    scales:{ y:{ min:82, max:100, ticks:{callback:v=>v+'%', font:{size:10}} }, x:{ ticks:{font:{size:10}} } },
+    plugins:{ legend:{ position:'bottom', labels:{font:{size:10}, boxWidth:10} },
+      annotation:{ annotations:{ line1:{ type:'line', yMin:95, yMax:95, borderColor:'rgba(58,122,58,0.5)', borderWidth:1, borderDash:[4,4], label:{content:'95% meta', display:true, position:'end', font:{size:9}} } } }
+    }
+  }
+});
+
+/* Matriz de priorización — Bubble */
+new Chart(document.getElementById('matrizChart'),{
+  type:'bubble',
+  data:{
+    datasets:[
+      { label:'No conformidades críticas', backgroundColor:'rgba(185,64,64,0.55)', borderColor:'#B94040', data:[
+        {x:9,y:9,r:16}, {x:8,y:8,r:15}, {x:9,y:7,r:14}, {x:7,y:9,r:13}
+      ]},
+      { label:'Oportunidades de mejora', backgroundColor:'rgba(200,150,62,0.55)', borderColor:'#C8963E', data:[
+        {x:6,y:7,r:11}, {x:5,y:6,r:10}, {x:7,y:5,r:10}, {x:4,y:8,r:9}, {x:6,y:4,r:8}
+      ]},
+      { label:'Fortalezas', backgroundColor:'rgba(58,122,58,0.45)', borderColor:'#3A7A3A', data:[
+        {x:3,y:2,r:9}, {x:2,y:4,r:8}, {x:4,y:3,r:10}
+      ]}
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    scales:{
+      x:{ min:0, max:11, title:{display:true, text:'Impacto Operacional', font:{size:10}}, ticks:{font:{size:9}} },
+      y:{ min:0, max:11, title:{display:true, text:'Urgencia de Atención', font:{size:10}}, ticks:{font:{size:9}} }
+    },
+    plugins:{ legend:{ position:'bottom', labels:{font:{size:10}, boxWidth:10} } }
+  }
+});
+
+/* Gantt simplificado */
+const ganttLabels = actions.map(a=>`A${a.n}: ${a.action.substring(0,45)}...`);
+const ganttData = actions.map(a=>({x:[a.inicio, a.inicio+a.dur], y:a.n}));
+new Chart(document.getElementById('ganttChart'),{
+  type:'bar',
+  data:{
+    labels:actions.map(a=>`A${a.n}`),
+    datasets:[
+      { label:'Período (meses)', data:actions.map(a=>a.dur),
+        backgroundColor:actions.map(a=>a.prio==='alta'?'rgba(185,64,64,0.7)':a.prio==='media'?'rgba(200,150,62,0.7)':'rgba(58,122,58,0.7)'),
+        base:actions.map(a=>a.inicio)
+      }
+    ]
+  },
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    scales:{
+      x:{ min:0, max:6, title:{display:true,text:'Mes',font:{size:10}}, ticks:{stepSize:1, callback:v=>'M'+(v+1), font:{size:10}} },
+      y:{ ticks:{ font:{size:9} } }
+    },
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ callbacks:{ label:ctx=>`Mes ${ctx.dataset.base[ctx.dataIndex]+1} — Mes ${ctx.dataset.base[ctx.dataIndex]+ctx.parsed.x}` } }
+    }
+  }
+});
+</script>
+</body>
+</html>
